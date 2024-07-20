@@ -1,0 +1,139 @@
+========> 1. app.use(express.json());
+
+By using app.use(express.json());, you are telling your Express app to use this middleware globally for all incoming requests. This means that any incoming request with a JSON payload will be automatically parsed, and the resulting JavaScript object will be made available on req.body.
+
+Example: 
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "age": 30
+}
+
+npm install express
+
+const express = require('express');
+const app = express();
+
+// Middleware to parse JSON data
+app.use(express.json());
+
+// Define a POST endpoint to handle user creation
+app.post('/create-user', (req, res) => {
+    // Access the parsed JSON data from the request body
+    const userData = req.body;
+    console.log(userData);
+    
+    // Send a response back to the client
+    res.status(201).send('User created successfully');
+});
+
+// Start the server
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+
+=========> 2. app.use(express.urlencoded({ extended: true }));
+
+Usage: By using app.use(express.urlencoded({ extended: true }));, you are telling your Express app to use this middleware globally for all incoming requests. This means that any incoming request with URL-encoded payloads will be automatically parsed, and the resulting JavaScript object will be made available on req.body.
+
+Example:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Form</title>
+</head>
+<body>
+    <form action="/submit-form" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email"><br><br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
+
+
+npm install express
+
+
+const express = require('express');
+const app = express();
+
+// Middleware to parse URL-encoded data
+app.use(express.urlencoded({ extended: true }));
+
+// Define a POST endpoint to handle form submission
+app.post('/submit-form', (req, res) => {
+    // Access the parsed URL-encoded data from the request body
+    const formData = req.body;
+    console.log(formData);
+    
+    // Send a response back to the client
+    res.send('Form data received');
+});
+
+// Start the server
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+
+=====> 3. app.use(cors());
+
+Imagine you have an Express.js server that provides a RESTful API, and you want to allow clients from different origins (domains) to access your API. This is where Cross-Origin Resource Sharing (CORS) comes into play.
+
+CORS is a mechanism that allows restricted resources on a web server to be requested from another domain outside the domain from which the resource originated. It is a security feature implemented by web browsers to prevent malicious websites from accessing sensitive data on other domains.
+
+Example:
+
+npm install cors
+
+const express = require('express');
+const cors = require('cors');
+const app = express();
+
+// Enable CORS for all routes
+app.use(cors());
+
+// Define a simple GET endpoint
+app.get('/data', (req, res) => {
+    res.json({ message: 'This is data from the server' });
+});
+
+// Start the server
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS Example</title>
+</head>
+<body>
+    <button id="fetchData">Fetch Data</button>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('fetchData').addEventListener('click', () => {
+            fetch('http://localhost:3000/data')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').textContent = data.message;
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
